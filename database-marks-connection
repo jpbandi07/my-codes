@@ -1,1 +1,31 @@
+import mariadb
 
+try:
+    conn = mariadb.connect(
+        user="root",
+        password="password",
+        host="localhost",
+        database="mydb"
+    )
+    
+    cursor = conn.cursor()
+    cursor.execute("select id,avg(marks) amarks  from marks group by id order by amarks desc ")
+    row=cursor.fetchall()
+    print(row)
+    arr=[]
+    for i in row:
+        arr.append(i[1])
+    print(arr)
+    
+    for i in range(len(arr)):
+        rank=1   
+
+        for j in range(len(arr)):
+            if arr[j] > arr[i]:
+                rank += 1
+
+        print(arr[i], "Rank =", rank)       
+        
+
+except mariadb.Error as e:
+    print(f"Error connecting to MariaDB Platform: {e}")
