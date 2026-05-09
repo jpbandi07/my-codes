@@ -1,0 +1,22 @@
+----------create database---------------
+create database products;
+use products;
+----------create table---------------
+create table prod(id int primary key,name varchar(50),wt int,status varchar(50));
+----------INSERT VALUES FROM PYTHON AND ALSO SELECTING VALUES----------------
+import mariadb
+try:
+    conn=mariadb.connect(
+        user="root",
+        password="password",
+        host="localhost",
+        database="products"
+    )
+    cursor= conn.cursor()
+    query="insert into prod(id,name,wt,status)values(?,?,?,?)"
+    data=[(1,"pen",30,"delivered"),(2,"tv",60,"pending"),(3,"Laptop",1,"delivered"),(4,"mobile",2,"pending")]
+    cursor.executemany(query,data)
+    conn.commit()
+    cursor.execute("select * from prod")
+except mariadb.Error as e:
+    print(f"Error connecting to MariaDB Platform: {e}") 
