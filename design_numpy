@@ -1,0 +1,25 @@
+--------------create database--------------------------
+create database design
+use database
+--------------python importing numpy in mariadb-------------
+import numpy as np
+import mariadb
+try:
+        conn = mariadb.connect(
+        user="root",
+        password="password",
+        host="localhost",
+        database="design"
+        )
+        cursor=conn.cursor()
+        data=[(1,"saree",4000),(2,"shirt",2000),(3,"pant",3000),(4,"jeans",5000)]
+        query="insert into garment(id,descrip,price)values(?,?,?)"
+        cursor.executemany(query,data)
+        cursor.execute("select * from garment")
+        conn.commit()
+        dot=cursor.fetchall()
+        arr=np.array(dot)
+        print(arr)
+except mariadb.Error as e:
+    print(f"Error connecting to MariaDB Platform: {e}")
+-------conn close----------------------        
