@@ -1,0 +1,14 @@
+import mariadb
+import numpy as np
+
+conn = mariadb.connect(
+    user="root",
+    password="password",
+    host="localhost",
+    database="design"
+)
+cursor = conn.cursor()
+cursor.execute("SELECT * FROM garment")
+arr = np.array(cursor.fetchall())
+high_price = arr[arr[:, 2].astype(int) > 4000]
+print(high_price)
