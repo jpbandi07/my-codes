@@ -1,0 +1,37 @@
+-----------creating a new database----------------------
+create database Employee sal
+use Employee_sal
+create table employee(id int,name varchar(50),salary int)
+
+--------------input values from python using pandas------------------
+
+import pandas as pd 
+import mariadb
+try:
+    
+    conn=mariadb.connect(
+        user="root",
+        password="password",
+        host="localhost",
+        database="employee_sal"
+    )
+
+-----------------putting values into tables---------------------
+
+    data=[(1,"jphn",1000),(2,"smith",2000),(3,"michael",3000),(4,"jordan",4000),(6,"pen",8200)]
+    cursor=conn.cursor()
+    query="insert into employee(id,name,salary)values(?,?,?)"
+    cursor.executemany(query,data)
+    conn.commit()
+
+-----------------------reading values into pandas frame------------------------------
+    
+    fd=pd.read_sql("select * from employee",conn)
+    avg_sal = fd.groupby("id")["salary"].mean()
+    print(avg_sal)
+    fd=pd.read_sql("select * from employee",conn)
+    top = fd.loc[fd["salary"].idxmax()]
+    print(top)
+    
+except mariadb.Error as e:
+    print(f"Error connecting to MariaDB Platform: {e}")
